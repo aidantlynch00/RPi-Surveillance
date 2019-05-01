@@ -1,0 +1,6 @@
+Parts: 
+-Raspberry Pi Zero W
+-Arducam Camera
+-150mm X 130mm 500mAh/5V (2.5W) Solar Panel
+-Pimoroni OnOff SHIM for Raspberry Pi
+-Omars 10,000mAh battery bank
