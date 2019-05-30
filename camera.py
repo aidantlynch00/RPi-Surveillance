@@ -63,6 +63,8 @@ while True:
     prev_frame = curr_frame.copy()
     print 'Previous frame ID: ', hex(id(prev_frame))
     print 'Current frame ID:  ', hex(id(curr_frame))
+    
+    curr_frame.close()
 
     #Capture image to bit stream
     stream = BytesIO()
@@ -71,6 +73,11 @@ while True:
 
     curr_frame = Image.open(stream).resize((320, 240)).convert('RGB')
     stream.close()
+    
+    curr_frame.show()
+    sleep(2)
+    prev_frame.show()
+    sleep(2)
     
     #Compute variance between frames
     if prev_frame != None and curr_frame != None:
@@ -82,6 +89,7 @@ while True:
             #Run OpenCV algorithm
             pass
 
+camera.stop_preview()
 camera.close()
 
     
