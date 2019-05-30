@@ -11,8 +11,15 @@ def compute_variance(frame1, frame2):
     variance_sums = [0.0] * 3
 
     #For each pixel
+
+    ### SOLUTION CONVERTING PIL IMAGE TO NUMPY ARRAY ###
+    rgb1 = np.array(frame1)
+    rgb2 = np.array(frame2)
+
     for x in range(img_width):
         for y in range(img_height):
+            ### SOLUTION USING PILs BUILT IN 'getpixel' METHOD ###
+            '''
             #Fetch the RGB values of each image at the pixel (x, y)
             rgb1 = frame1.getpixel((x, y))
             rgb2 = frame2.getpixel((x, y))
@@ -29,6 +36,15 @@ def compute_variance(frame1, frame2):
             variance_sums[0] += r_variance
             variance_sums[1] += g_variance
             variance_sums[2] += b_variance
+            '''
+            #######################################################
+
+            for channel in range(3):
+                variance_sums[channel] += float(abs(rgb1[y, x, channel] - rgb2[y, x, channel])) / 255
+
+            
+
+
 
     num_pixels = img_width * img_height
 
@@ -61,23 +77,16 @@ sleep(2)
 while True:
     print 'Loop'
     prev_frame = curr_frame.copy()
-    print 'Previous frame ID: ', hex(id(prev_frame))
-    print 'Current frame ID:  ', hex(id(curr_frame))
     
+    #Free the previous memory previously used
     curr_frame.close()
 
     #Capture image to bit stream
     stream = BytesIO()
     camera.capture(stream, format = 'jpeg')
     stream.seek(0) #Reset pointer to start of stream to read data
-
     curr_frame = Image.open(stream).resize((320, 240)).convert('RGB')
     stream.close()
-    
-    curr_frame.show()
-    sleep(2)
-    prev_frame.show()
-    sleep(2)
     
     #Compute variance between frames
     if prev_frame != None and curr_frame != None:
@@ -89,6 +98,7 @@ while True:
             #Run OpenCV algorithm
             pass
 
+#Free camera resources
 camera.stop_preview()
 camera.close()
 
