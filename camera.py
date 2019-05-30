@@ -5,7 +5,7 @@ from io import BytesIO
 import numpy as np
 
 THRESHOLD = .3
-RGB_VARIANCE_THRESHOLD = 10
+RGB_VARIANCE_THRESHOLD = 7
 
 def compute_variance(frame1, frame2):
     img_width, img_height = frame1.size
@@ -16,13 +16,13 @@ def compute_variance(frame1, frame2):
     #For each pixel
 
     ### SOLUTION CONVERTING PIL IMAGE TO NUMPY ARRAY ###
-    #rgb1 = np.array(frame1)
-    #rgb2 = np.array(frame2)
+    rgb1 = np.array(frame1)
+    rgb2 = np.array(frame2)
 
     for x in range(img_width):
         for y in range(img_height):
             ### SOLUTION USING PILs BUILT IN 'getpixel' METHOD ###
-            
+            '''
             #Fetch the RGB values of each image at the pixel (x, y)
             rgb1 = frame1.getpixel((x, y))
             rgb2 = frame2.getpixel((x, y))
@@ -36,11 +36,11 @@ def compute_variance(frame1, frame2):
             variance_sums[0] += r_changed
             variance_sums[1] += g_changed
             variance_sums[2] += b_changed
-            
+            '''
             #######################################################
 
-            #for channel in range(3):
-            #    variance_sums[channel] += float(abs(rgb1[y, x, channel] - rgb2[y, x, channel])) / 255
+            for channel in range(3):
+                variance_sums[channel] += 1 if abs(int(rgb1[y, x, channel]) - int(rgb2[y, x, channel])) > RGB_VARIANCE_THRESHOLD else 0
 
     num_pixels = img_width * img_height
 
@@ -87,7 +87,7 @@ while True:
         print 'Variance: ', variance
 
         #If the variance is greater than set threshold, pass curr_frame into OpenCV
-        if variance > threshold:
+        if variance > THRESHOLD:
             #Run OpenCV algorithm
             pass
 
