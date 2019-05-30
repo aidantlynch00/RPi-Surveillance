@@ -8,7 +8,7 @@ def compute_variance(frame1, frame2):
     img_width, img_height = frame1.size
     print 'Width: ', img_width, '   Height: ', img_height	
     
-    variance_sums = [0] * 3
+    variance_sums = [0.0] * 3
 
     #For each pixel
     for x in range(img_width):
@@ -17,8 +17,8 @@ def compute_variance(frame1, frame2):
             rgb1 = frame1.getpixel((x, y))
             rgb2 = frame2.getpixel((x, y))
 
-	    print(rgb1)
-	    print(rgb2)
+	        #print(rgb1)
+	        #print(rgb2)
 
             #Difference in each channel represented as a number between 0 and 1
             r_variance = float(abs(rgb1[0] - rgb2[0])) / 255
@@ -47,27 +47,30 @@ def compute_variance(frame1, frame2):
 camera = PiCamera()
 camera.led = False
 
-#Declare bit stream and image variables
-stream = BytesIO()
+#Declare image variables
 prev_frame = Image.new('RGB', (320, 240))
 curr_frame = Image.new('RGB', (320, 240))
 
 #Assign variance threshold
 threshold = .13 #TODO: change arbitrary number lol
 
+camera.start_preview()
 sleep(2)
 
 #Main camera loop
 while True:
     print 'Loop'
     prev_frame = curr_frame.copy()
+    print 'Previous frame ID: ', hex(id(prev_frame))
+    print 'Current frame ID:  ', hex(id(curr_frame))
 
     #Capture image to bit stream
+    stream = BytesIO()
     camera.capture(stream, format = 'jpeg')
     stream.seek(0) #Reset pointer to start of stream to read data
 
     curr_frame = Image.open(stream).resize((320, 240)).convert('RGB')
-    stream.flush()
+    stream.close()
     
     #Compute variance between frames
     if prev_frame != None and curr_frame != None:
@@ -78,5 +81,7 @@ while True:
         if variance > threshold:
             #Run OpenCV algorithm
             pass
+
+camera.close()
 
     
