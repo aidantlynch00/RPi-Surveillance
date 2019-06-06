@@ -24,6 +24,7 @@ def compute_variance(frame1, frame2):
     rgb1 = np.array(frame1)
     rgb2 = np.array(frame2)
 
+    #Loop through each pixel and each color channel to determine if the pixel changed past the threshold
     for x in range(img_width):
         for y in range(img_height):
             for channel in range(3):
@@ -76,6 +77,8 @@ while True:
         #If the variance is greater than set threshold, pass curr_frame into OpenCV
         if variance > THRESHOLD:
             #Run OpenCV algorithm
+
+            #File saving
             filename = str(datetime.datetime.now(TIMEZONE))[0:-9] + '.jpg'
             curr_frame.save('./Stored Images/')
             pass
